@@ -226,7 +226,7 @@ def translate_accent_jodoushi(keitaiso, tokyo_hl, prev_hl):
 
     print(keitaiso)
     print(hl_table, katsuyoukei, text)
-    assert False, f'知らない活用系です．助動詞 {base_form} の {katsuyoukei}: {text}'
+    assert False, f'知らない活用形です．助動詞 {base_form} の {katsuyoukei}: {text}'
     return tokyo_hl
 
 
