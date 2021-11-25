@@ -76,6 +76,8 @@ def create_osaka_accent_labels_from_text(text):
 def translate_accent_noun_jodoushi(keitaiso):
     if keitaiso[0] in ['そう', 'よう']:
         return [1. , 0.], 0
+    elif keitaiso[0] in ['そ', 'よ']:# これは仕方なし，本当はやりたくない
+        return [1. ], 0
     else:
         assert False, '知らない助動詞語幹です'
 
@@ -267,10 +269,10 @@ def translate_accent_joshi(keitaiso, tokyo_hl, prev_hl):
     
     table = pd.read_csv('data/joshi_accent_translation_table.csv')
     row = table[table['単語'] == text][table['助詞種類'] == joshi_class]
+
     
-    
-    if row.shape == 0:
-        return tokyo_hl
+    if row.shape[0] == 0:
+        return tokyo_hl, prev_hl
     
     osaka_label = row['大阪弁アクセント'].values[0].replace('L', str(0)).replace('H', str(1)).replace('*', str(prev_hl)).split()
     osaka_label = [int(x) for x in osaka_label]
@@ -310,8 +312,8 @@ def translate_accent_jodoushi(keitaiso, tokyo_hl, prev_hl, mora_num, ta_followed
     try:
         hl_table = pd.read_csv(f'./data/jodoushi_hl_tables/{base_form}.csv')
     except:
-        print('jodoushi_hl_tables に該当アクセントがありません，東京方言アクセントを返します')
-        print(base_form)
+        #print('jodoushi_hl_tables に該当アクセントがありません，東京方言アクセントを返します')
+        #print(base_form)
         return tokyo_hl, prev_hl
     
     for col, row in hl_table.iterrows():
@@ -323,14 +325,7 @@ def translate_accent_jodoushi(keitaiso, tokyo_hl, prev_hl, mora_num, ta_followed
     
     print('助動詞アクセントファイルに不足があります．')
     print(f'終止形: {base_form}, 活用形: {keitaiso}')
-    assert False, '失敗'
-    return tokyo_hl
+    #assert False, '失敗'
+    return tokyo_hl, prev_hl
     
-import sys
-
-
-if __name__ == '__main__':
-    args = sys.argv
-    print(args[1])
-    hl_labels = create_osaka_accent_labels_from_text(args[1])
-    print(hl_labels)
+    
